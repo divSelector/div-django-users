@@ -9,6 +9,8 @@ It's a starting point.
 
 1. Add "users" to your INSTALLED_APPS setting like this::
 
+
+```
     INSTALLED_APPS = [
         ...,
         'users',
@@ -16,17 +18,21 @@ It's a starting point.
     	'allauth.account',
     	'allauth.socialaccount'
     ]
+```
 
 2. Include the polls URLconf in your project urls.py like this::
 
+```
     urlpatterns = [
         path('users/', include('users.urls')),
         path('users/', include('allauth.urls')),
         path('admin/', admin.site.urls),
     ]
+```
 
 3. You will need these settings in your settings.py
 
+```
     AUTHENTICATION_BACKENDS = [
         'django.contrib.auth.backends.ModelBackend',
         'allauth.account.auth_backends.AuthenticationBackend',
@@ -48,9 +54,10 @@ It's a starting point.
     ACCOUNT_USERNAME_REQUIRED = False
     ACCOUNT_AUTHENTICATION_METHOD = 'email'
     ACCOUNT_EMAIL_VERIFICATION = 'none'      # Require email verification for new accounts
-
+```
 
 4. Run `python manage.py migrate` to create the user model.
+
 5. Run `python manage.py createsuperuser` to create a superuser to login.
 
 6. Start the development server and visit http://127.0.0.1:8000/admin/
