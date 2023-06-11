@@ -50,7 +50,7 @@ It's a starting point.
 
     SITE_ID = 1  # Required by Django-allauth
     LOGIN_REDIRECT_URL = '/'  # URL to redirect the user after login
-    LOGIN_URL = "/users/login"
+    LOGIN_URL = "/u/login"
 
     AUTH_USER_MODEL = 'users.User'
     ACCOUNT_USER_MODEL_USERNAME_FIELD = None
