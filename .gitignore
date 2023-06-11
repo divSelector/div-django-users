@@ -1,3 +1,4 @@
 dist/
 div_django_users.egg-info/
+*/__pycache__
 
