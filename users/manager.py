@@ -3,17 +3,6 @@ from django.utils import timezone
 from django.contrib.auth import get_user_model
 from allauth.account.models import EmailAddress
 
-# def create_group_with_permission(name, models: Tuple[Model, str]):
-#     group = Group.objects.create(name=name)
-
-#     for model, codename in models:
-#         content_type = ContentType.objects.get_for_model(model)
-#         permission = Permission.objects.get(content_type=content_type, codename=codename)
-
-#     group.permissions.add(permission)
-#     return group
-
-
 class UserManager(BaseUserManager):
     def _create_user(self, email, password, is_staff, is_superuser, **extra_fields):
         if not email:
@@ -30,9 +19,7 @@ class UserManager(BaseUserManager):
         )
         user.set_password(password)
         user.save()
-
-        # self.add_primary_email(user)
-
+        
         return user
 
 
@@ -43,13 +30,3 @@ class UserManager(BaseUserManager):
     def create_superuser(self, email, password, **extra_fields):
         user=self._create_user(email, password, True, True, **extra_fields)
         return user
-
-
-    # @staticmethod
-    # def add_primary_email(user):
-    #     email = EmailAddress.objects.create(
-    #         user_id=user.id, 
-    #         email=user.email, 
-    #         primary=True
-    #     )
-    #     email.save()

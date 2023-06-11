@@ -6,6 +6,9 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.admin.widgets import FilteredSelectMultiple    
 from django.contrib.auth.models import Group
+from allauth.account.models import EmailAddress
+from allauth.account.admin import EmailAddressAdmin
+from allauth.account.adapter import get_adapter
 
 
 User = get_user_model()
@@ -57,8 +60,20 @@ class CustomUserAdmin(UserAdmin):
             if f in form.base_fields:
                 form.base_fields[f].disabled = True
 
-        return form
+        return form    
 
+    def activate_users(self, request, queryset):
+        assert request.user.has_perm('auth.change_user')
+        cnt = queryset.filter(is_active=False).update(is_active=True)
+        self.message_user(request, 'Activated {} users.'.format(cnt))
+
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        if not request.user.has_perm('auth.change_user'):
+            del actions['activate_users']
+        return actions
+
+    actions = ['activate_users']
     list_display = ('email', 'is_staff', 'is_active', 'date_joined', 'last_login')
     list_filter = ('is_staff', 'is_active', 'date_joined', 'last_login')
     search_fields = ('email',)
@@ -76,6 +91,7 @@ class CustomUserAdmin(UserAdmin):
     readonly_fields = [
         'date_joined',
     ]
+    activate_users.short_description = 'Activate Users'
 
 
 class GroupAdminForm(forms.ModelForm):
@@ -111,3 +127,31 @@ admin.site.unregister(Group)
 class GroupAdmin(admin.ModelAdmin):
     form = GroupAdminForm
     filter_horizontal = ['permissions']
+
+admin.site.unregister(EmailAddress)
+
+@admin.register(EmailAddress)
+class CustomEmailAddressAdmin(EmailAddressAdmin):
+    list_display = ("email", "user", "primary", "verified")
+    list_filter = ("primary", "verified")
+    search_fields = []
+    raw_id_fields = ("user",)
+    actions = ["make_verified"]
+
+    def get_search_fields(self, request):
+        base_fields = get_adapter(request).get_user_search_fields()
+        return ["email"] + list(map(lambda a: "user__" + a, base_fields))
+
+    def make_verified(self, request, queryset):
+        assert request.user.has_perm('auth.change_user')
+        queryset.update(verified=True)
+        cnt = queryset.filter(verified=False).update(verified=True)
+        self.message_user(request, 'Activated {} users.'.format(cnt))
+
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        if not request.user.has_perm('auth.change_user'):
+            del actions['make_verified']
+        return actions
+
+    make_verified.short_description = "Mark selected email addresses as verified"
