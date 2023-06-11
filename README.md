@@ -23,11 +23,15 @@ It's a starting point.
 2. Include the polls URLconf in your project urls.py like this::
 
 ```
-    urlpatterns = [
-        path('users/', include('users.urls')),
-        path('users/', include('allauth.urls')),
-        path('admin/', admin.site.urls),
+    user_urls = [
+        path('', include('users.urls')),
+        path('', include('allauth.urls')),
     ]
+
+    urlpatterns = [
+        path('u/', include(user_urls)),
+    ]
+
 ```
 
 3. You will need these settings in your settings.py
