@@ -1,14 +1,11 @@
-================
-div_django_users
-================
+# div_django_users
 
-This is a template for a basic allauth users app. It has a customer model with email for username.
+This is a template for a basic allauth users app. It has a custom model with email for username.
 It prevents not-superuser staff users from abusing the admin page (to some capacity).
 It has stock templates and static files for the class based generic auth views.
 It's a starting point.
 
-Quick start
------------
+## Quick start
 
 1. Add "users" to your INSTALLED_APPS setting like this::
 
@@ -53,8 +50,8 @@ Quick start
     ACCOUNT_EMAIL_VERIFICATION = 'none'      # Require email verification for new accounts
 
 
-4. Run ``python manage.py migrate`` to create the user model.
-5. Run ``python manage.py createsuperuser`` to create a superuser to login.
+4. Run `python manage.py migrate` to create the user model.
+5. Run `python manage.py createsuperuser` to create a superuser to login.
 
 6. Start the development server and visit http://127.0.0.1:8000/admin/
 
